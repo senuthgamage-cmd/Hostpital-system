@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../context/AuthContext';
 import { Users, Calendar, ShieldAlert, PlusCircle, Search, DollarSign, FlaskConical, Pill } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const DashboardOverview = () => {
   const [patientCount, setPatientCount] = useState(0);
@@ -99,7 +99,7 @@ const DashboardOverview = () => {
             <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: '1.2rem' }}>
               Recently Registered Patients
             </h3>
-            <Link to="/dashboard/patients" className="btn btn-secondary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
+            <Link href="/dashboard/patients" className="btn btn-secondary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
               View All
             </Link>
           </div>
@@ -110,7 +110,7 @@ const DashboardOverview = () => {
             ) : recentPatients.length === 0 ? (
               <div className="empty-state" style={{ padding: '2rem' }}>
                 <p>No patients registered in the system yet.</p>
-                <Link to="/dashboard/register" className="btn" style={{ width: 'auto', marginTop: '1rem', padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
+                <Link href="/dashboard/register" className="btn" style={{ width: 'auto', marginTop: '1rem', padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
                   <PlusCircle size={16} />
                   <span>Register First Patient</span>
                 </Link>
@@ -148,12 +148,12 @@ const DashboardOverview = () => {
             Quick Actions
           </h3>
           
-          <Link to="/dashboard/register" className="btn" style={{ justifyContent: 'flex-start' }}>
+          <Link href="/dashboard/register" className="btn" style={{ justifyContent: 'flex-start' }}>
             <PlusCircle size={20} />
             <span>Register New Patient</span>
           </Link>
 
-          <Link to="/dashboard/patients" className="btn btn-secondary" style={{ justifyContent: 'flex-start', color: '#fff' }}>
+          <Link href="/dashboard/patients" className="btn btn-secondary" style={{ justifyContent: 'flex-start', color: '#fff' }}>
             <Search size={20} />
             <span>Search Patient Directory</span>
           </Link>

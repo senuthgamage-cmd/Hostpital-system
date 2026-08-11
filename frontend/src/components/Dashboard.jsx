@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { AuthContext } from '../context/AuthContext';
 import { 
   Activity, 
@@ -13,13 +14,13 @@ import {
 } from 'lucide-react';
 import { hmsModuleNav } from '../data/hmsModules';
 
-const Dashboard = () => {
+const Dashboard = ({ children }) => {
   const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    router.push('/login');
   };
 
   // Get initials for profile avatar
@@ -44,34 +45,34 @@ const Dashboard = () => {
 
         <nav className="nav-list">
           <li>
-            <NavLink to="/dashboard" end className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            <Link href="/dashboard" className={`nav-link ${router.pathname === '/dashboard' ? 'active' : ''}`}>
               <LayoutDashboard size={20} />
               <span>Overview</span>
-            </NavLink>
+            </Link>
           </li>
           <li>
-            <NavLink to="/dashboard/register" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            <Link href="/dashboard/register" className={`nav-link ${router.pathname === '/dashboard/register' ? 'active' : ''}`}>
               <UserPlus size={20} />
               <span>Register Patient</span>
-            </NavLink>
+            </Link>
           </li>
           <li>
-            <NavLink to="/dashboard/patients" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            <Link href="/dashboard/patients" className={`nav-link ${router.pathname === '/dashboard/patients' ? 'active' : ''}`}>
               <Users size={20} />
               <span>Patient Directory</span>
-            </NavLink>
+            </Link>
           </li>
           <li>
-            <NavLink to="/dashboard/reports" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            <Link href="/dashboard/reports" className={`nav-link ${router.pathname === '/dashboard/reports' ? 'active' : ''}`}>
               <FileText size={20} />
               <span>Reports</span>
-            </NavLink>
+            </Link>
           </li>
           <li>
-            <NavLink to="/dashboard/settings" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            <Link href="/dashboard/settings" className={`nav-link ${router.pathname === '/dashboard/settings' ? 'active' : ''}`}>
               <Settings size={20} />
               <span>Settings</span>
-            </NavLink>
+            </Link>
           </li>
 
           <li style={{ marginTop: '1rem' }}>
@@ -81,10 +82,10 @@ const Dashboard = () => {
           </li>
           {hmsModuleNav.map((module) => (
             <li key={module.key}>
-              <NavLink to={`/dashboard/module/${module.key}`} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+              <Link href={`/dashboard/module/${module.key}`} className={`nav-link ${router.pathname === `/dashboard/module/[moduleKey]` || router.asPath.startsWith(`/dashboard/module/${module.key}`) ? 'active' : ''}`}>
                 <ClipboardList size={20} />
                 <span>{module.label}</span>
-              </NavLink>
+              </Link>
             </li>
           ))}
         </nav>
@@ -119,7 +120,7 @@ const Dashboard = () => {
         </header>
 
         <div className="content-body">
-          <Outlet />
+          {children}
         </div>
       </main>
     </div>

@@ -1,9 +1,9 @@
-const db = require('./config/db');
+const { query } = require('./config/db');
 
 async function testConnection() {
   try {
-    console.log('Testing connection to MySQL database...');
-    const [rows] = await db.query('SELECT 1 + 1 AS result');
+    console.log('Testing connection to Supabase PostgreSQL database...');
+    const [rows] = await query('SELECT 1 + 1 AS result');
     console.log('Database connection successful! Test query result:', rows[0].result);
     process.exit(0);
   } catch (error) {

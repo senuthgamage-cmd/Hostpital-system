@@ -10,9 +10,11 @@ const reportRoutes = require('./routes/reportRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const allowedOrigin = process.env.FRONTEND_ORIGIN || '*';
+
 // Enable CORS for frontend access
 app.use(cors({
-  origin: '*', // In production, replace with specific domain
+  origin: allowedOrigin,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));

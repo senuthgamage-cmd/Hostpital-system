@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { api } from '../context/AuthContext';
 import { hmsModuleConfigs } from '../data/hmsModules';
 import { AlertCircle, CheckCircle2, Edit2, PlusCircle, Search, Trash2 } from 'lucide-react';
@@ -25,7 +26,17 @@ const formatValue = (value, key) => {
 };
 
 const ModulePage = () => {
-  const { moduleKey } = useParams();
+  const router = useRouter();
+  const { moduleKey } = router.query || {};
+
+  if (!router.isReady) {
+    return (
+      <div className="table-panel">
+        <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>Loading module...</div>
+      </div>
+    );
+  }
+
   const config = hmsModuleConfigs[moduleKey];
 
   const emptyForm = useMemo(() => getEmptyForm(config?.fields || []), [config]);
@@ -151,7 +162,7 @@ const ModulePage = () => {
           <AlertCircle size={20} />
           <span>Unknown module.</span>
         </div>
-        <Link to="/dashboard" className="btn" style={{ width: 'auto', marginTop: '1rem' }}>
+        <Link href="/dashboard" className="btn" style={{ width: 'auto', marginTop: '1rem' }}>
           Back to Dashboard
         </Link>
       </div>

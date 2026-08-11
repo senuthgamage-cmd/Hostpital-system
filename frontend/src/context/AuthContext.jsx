@@ -5,32 +5,50 @@ export const AuthContext = createContext();
 
 // Setup Axios default configuration
 export const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: (process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api').replace(/\/$/, ''),
 });
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('hms_token'));
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Set auth header whenever token changes
+  // Initialize token/user from localStorage on client only
   useEffect(() => {
-    if (token) {
+    if (typeof window === 'undefined') {
+      setLoading(false);
+      return;
+    }
+
+    const savedToken = localStorage.getItem('hms_token');
+    const savedUser = localStorage.getItem('hms_user');
+    if (savedToken) {
+      setToken(savedToken);
+      api.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
+    }
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (e) {
+        setUser(null);
+      }
+    }
+
+    setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Set auth header whenever token changes (and persist)
+  useEffect(() => {
+    if (token && typeof window !== 'undefined') {
       localStorage.setItem('hms_token', token);
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      
-      // Attempt to decode user info from token or load it
-      const savedUser = localStorage.getItem('hms_user');
-      if (savedUser) {
-        setUser(JSON.parse(savedUser));
-      }
-    } else {
+    } else if (typeof window !== 'undefined') {
       localStorage.removeItem('hms_token');
       localStorage.removeItem('hms_user');
       delete api.defaults.headers.common['Authorization'];
       setUser(null);
     }
-    setLoading(false);
   }, [token]);
 
   const login = async (username, password) => {

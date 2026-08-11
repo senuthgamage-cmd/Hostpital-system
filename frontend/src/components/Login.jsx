@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { AuthContext } from '../context/AuthContext';
 import { User, Lock, Activity, LogIn, AlertCircle } from 'lucide-react';
 
@@ -9,14 +9,14 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // If user is already logged in, redirect to dashboard
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      router.replace('/dashboard');
     }
-  }, [user, navigate]);
+  }, [user, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +32,7 @@ const Login = () => {
     setLoading(false);
 
     if (result.success) {
-      navigate('/dashboard');
+      router.push('/dashboard');
     } else {
       setError(result.message);
     }
