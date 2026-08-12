@@ -1,7 +1,7 @@
 const db = require('../config/db');
 
 const countTable = async (table) => {
-  const [rows] = await db.query(`SELECT COUNT(*) AS total FROM \`${table}\``);
+  const [rows] = await db.query(`SELECT COUNT(*) AS total FROM "${table}"`);
   return rows[0]?.total || 0;
 };
 
@@ -23,7 +23,7 @@ exports.summary = async (req, res) => {
     ]);
 
     const [todayAppointmentsRows] = await db.query(
-      "SELECT COUNT(*) AS total FROM appointments WHERE appointment_date = CURDATE() AND status <> 'Cancelled'"
+      "SELECT COUNT(*) AS total FROM appointments WHERE appointment_date = CURRENT_DATE AND status <> 'Cancelled'"
     );
 
     const [revenueRows] = await db.query(
@@ -31,12 +31,13 @@ exports.summary = async (req, res) => {
     );
 
     const [pharmacyAlertRows] = await db.query(
-      "SELECT COUNT(*) AS total FROM pharmacy_items WHERE stock_quantity <= 10 OR status IN ('Low Stock', 'Out of Stock', 'Expired') OR (expiry_date IS NOT NULL AND expiry_date <= DATE_ADD(CURDATE(), INTERVAL 30 DAY))"
+      "SELECT COUNT(*) AS total FROM pharmacy_items WHERE stock_quantity <= 10 OR status IN ('Low Stock', 'Out of Stock', 'Expired') OR (expiry_date IS NOT NULL AND expiry_date <= CURRENT_DATE + INTERVAL '30 days')"
     );
 
     const [labRequestRows] = await db.query(
       "SELECT COUNT(*) AS total FROM laboratory_tests WHERE status <> 'Completed'"
     );
+
 
     res.json({
       totalPatients: patients,
