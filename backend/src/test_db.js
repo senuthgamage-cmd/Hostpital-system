@@ -13,3 +13,4 @@ async function testConnection() {
 }
 
 testConnection();
+
