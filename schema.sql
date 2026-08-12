@@ -182,7 +182,7 @@ INSERT INTO roles (id, name) VALUES
 (7, 'Accountant');
 
 INSERT INTO users (id, username, password, role_id, full_name) VALUES
-(1, 'admin', '$2a$10$TBze.RejBntEaRBbRFJnBOSVkhMn1un3g8h6QmtRyW2bKnUry3U9G', 1, 'System Administrator');
+(1, 'admin', '$2a$10$w10leB6/XVMHBNIc0RDWK.Vf63uRr0kgtH7OkG88SGpwrP6seVnwm', 1, 'System Administrator');
 
 INSERT INTO departments (id, name, description, recorded_by) VALUES
 (1, 'General Medicine', 'Primary care and routine consultations', 1),
