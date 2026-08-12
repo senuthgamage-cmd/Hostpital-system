@@ -21,8 +21,19 @@ function getConnectionConfig() {
 
 const pool = new Pool(getConnectionConfig());
 
+function normalizeQuery(text, params = []) {
+  const values = Array.isArray(params) ? params : [params];
+  let index = 0;
+  const sql = String(text).replace(/\?/g, () => {
+    index += 1;
+    return `$${index}`;
+  });
+  return { sql, values };
+}
+
 export async function query(sql, params = []) {
-  const result = await pool.query(sql, params);
+  const normalized = normalizeQuery(sql, params);
+  const result = await pool.query(normalized.sql, normalized.values);
   return result.rows;
 }
 
