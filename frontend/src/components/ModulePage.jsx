@@ -51,7 +51,7 @@ const ModulePage = () => {
     try {
       setError('');
       const params = query ? { search: query } : {};
-      const res = await api.get(`/modules/${config.apiKey}`, { params });
+      const res = await api.get(`/modules/${moduleKey}`, { params });
       setRecords(res.data || []);
     } catch (err) {
       console.error(err);
