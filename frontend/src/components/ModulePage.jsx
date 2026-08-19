@@ -29,14 +29,6 @@ const ModulePage = () => {
   const router = useRouter();
   const { moduleKey } = router.query || {};
 
-  if (!router.isReady) {
-    return (
-      <div className="table-panel">
-        <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>Loading module...</div>
-      </div>
-    );
-  }
-
   const config = hmsModuleConfigs[moduleKey];
 
   const emptyForm = useMemo(() => getEmptyForm(config?.fields || []), [config]);
@@ -54,9 +46,24 @@ const ModulePage = () => {
     setEditingId(null);
   }, [config]);
 
-  useEffect(() => {
-    if (!config) {
+  const fetchRecords = async (query = '') => {
+    if (!config) return;
+    try {
+      setError('');
+      const params = query ? { search: query } : {};
+      const res = await api.get(`/modules/${config.apiKey}`, { params });
+      setRecords(res.data || []);
+    } catch (err) {
+      console.error(err);
+      setError(`Failed to load ${config.title.toLowerCase()}.`);
+    } finally {
       setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!router.isReady || !config) {
+      if (!config) setLoading(false);
       return;
     }
 
@@ -65,26 +72,17 @@ const ModulePage = () => {
     }, 350);
 
     return () => clearTimeout(timeoutId);
-  }, [config, searchTerm]);
+  }, [router.isReady, config, searchTerm]);
 
-  const fetchRecords = async (query = '') => {
-    if (!config) {
-      return;
-    }
+  if (!router.isReady) {
+    return (
+      <div className="table-panel">
+        <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>Loading module...</div>
+      </div>
+    );
+  }
 
-    setLoading(true);
-    setError('');
 
-    try {
-      const response = await api.get(`/modules/${moduleKey}?search=${encodeURIComponent(query)}`);
-      setRecords(response.data);
-    } catch (requestError) {
-      console.error(`Failed to fetch ${moduleKey}:`, requestError);
-      setError('Failed to load records.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;

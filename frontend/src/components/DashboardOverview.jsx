@@ -153,7 +153,7 @@ const DashboardOverview = () => {
             <span>Register New Patient</span>
           </Link>
 
-          <Link href="/dashboard/patients" className="btn btn-secondary" style={{ justifyContent: 'flex-start', color: '#fff' }}>
+          <Link href="/dashboard/patients" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
             <Search size={20} />
             <span>Search Patient Directory</span>
           </Link>
@@ -162,7 +162,7 @@ const DashboardOverview = () => {
             marginTop: '1rem', 
             padding: '1.25rem', 
             borderRadius: '12px', 
-            background: 'rgba(255,255,255,0.02)', 
+            background: 'var(--bg-primary)', 
             border: '1px solid var(--border-color)',
             fontSize: '0.85rem',
             lineHeight: 1.6,
